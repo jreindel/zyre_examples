@@ -11,9 +11,10 @@ int main(int argc, char *argv[])
     }
 
     char * group_name = argv[1];
+    char * node_name = "T1T2_X_TX";
 
     // create a new node
-    zyre_t *node = zyre_new("listener");
+    zyre_t *node = zyre_new(node_name);
     if (!node)
     {
         return 1;                 //  Could not create new node
@@ -29,8 +30,15 @@ int main(int argc, char *argv[])
     printf("UUID: %s\n", zyre_uuid(node));
     while (true)
     {
-        zmsg_t * msg = zyre_recv(node);
+        zlist_t *peers = zyre_peers(node);
+        while(zlist_item(peers) != NULL)
+        {
+            printf("peer: %p\n",zlist_pop(peers));
+        }
+        zlist_destroy(&peers);
 
+	zmsg_t * msg = zyre_recv(node);
+	int i=0;
         // loop through the frames in the message
         while(true)
         {
@@ -39,7 +47,8 @@ int main(int argc, char *argv[])
             {
                 break;
             }
-            printf("frame: %s\n", msg_str);
+            printf("frame %d: %s\n", i++, msg_str);
+
             // with zmsg_popstr, you own the frame string
             // so you need to free it
             free(msg_str);

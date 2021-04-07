@@ -11,8 +11,10 @@ int main(int argc, char *argv[])
     }
 
     char * group_name = argv[1];
+    char * node_name = "external_interface";
+
     // create a new node
-    zyre_t *node = zyre_new("shouter");
+    zyre_t *node = zyre_new(node_name);
     if (!node)
     {
         return 1;                 //  Could not create new node
@@ -29,9 +31,17 @@ int main(int argc, char *argv[])
     for (int i = 0; i < 5; i++)
     {
         // this sends a SHOUT message
-        zyre_shouts(node, group_name, "%s", "hello");
+        zyre_shouts(node, group_name,
+			"This is a long message to test what a long message looks like on the input interface %d", i);
         zclock_sleep(1000);
     }
+    zyre_shouts(node, group_name,
+		    "The next two messages will include blank and then null messages");
+    zclock_sleep(1000);
+    zyre_shouts(node, group_name, "");
+    zclock_sleep(1000);
+    zyre_shouts(node, group_name, NULL);
+    zclock_sleep(1000);
     // this sends a LEAVE message
     zyre_leave(node, group_name);
     // this sends an EXIT message
