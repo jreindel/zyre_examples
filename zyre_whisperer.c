@@ -4,14 +4,9 @@
 // messages to a node with a specific UUID
 int main(int argc, char *argv[])
 {
-    if (argc < 2)
-    {
-        printf("Usage: ./zyre_whisperer <UUID>\n");
-        return 1;
-    }
 
-//    char * peer_uuid = argv[1];
     char * peer_uuid = "no";
+
     // create a new node
     zyre_t *node = zyre_new("whisperer");
     if (!node)
@@ -26,19 +21,19 @@ int main(int argc, char *argv[])
     // print UUID of node
     printf("UUID: %s\n", zyre_uuid(node));
 
-    // Recieve the ENTER message for another node
+    // Recieve the ENTER message for another node to get the uuid to whisper to
     while (peer_uuid == "no")
     { 
-	zmsg_t *msg = zyre_recv(node);
-	char *command = zmsg_popstr(msg);
-	if(streq(command, "ENTER"))
+	zmsg_t *msg = zyre_recv(node); // recieve message,
+	char *command = zmsg_popstr(msg); // parse first string of message (command)
+	if(streq(command, "ENTER")) // looking for an ENTER
 	{
 	    printf("Someone Joined!\n");
-	    peer_uuid = zmsg_popstr(msg);
-	    char *name = zmsg_popstr(msg);
+	    peer_uuid = zmsg_popstr(msg); // get second string of message (peer uuid)
+	    char *name = zmsg_popstr(msg); // get thirst string of messabe (peer name)
 	    printf("They are: %s AKA %s\n",peer_uuid,name);
 	}
-	else
+	else // not an ENTER message (realistically this is dead code because the first message this client will ever see is somone entering the network)
 	{
 	    printf("Still alone...\n");
 	}

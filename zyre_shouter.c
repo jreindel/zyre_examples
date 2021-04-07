@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
     }
 
     char * group_name = argv[1];
-    char * node_name = "external_interface";
+    char * node_name = "Shouter";
 
     // create a new node
     zyre_t *node = zyre_new(node_name);
