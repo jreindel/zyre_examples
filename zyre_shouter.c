@@ -40,8 +40,8 @@ int main(int argc, char *argv[])
     zclock_sleep(1000);
     zyre_shouts(node, group_name, "");
     zclock_sleep(1000);
-    zyre_shouts(node, group_name, NULL);
-    zclock_sleep(1000);
+    //zyre_shouts(node, group_name, NULL); // Sending NULL makes this program segfault
+    //zclock_sleep(1000);
     // this sends a LEAVE message
     zyre_leave(node, group_name);
     // this sends an EXIT message
